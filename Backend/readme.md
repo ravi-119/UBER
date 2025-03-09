@@ -36,11 +36,70 @@ Example:
 - `409 Conflict`: The username or email address is already taken.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
-
 - `user` (object):
     - `fullname` (object):
         - `firstName` (string): The user's first name.
         - `lastName` (string): The user's last name.
     - `email` (string): The user's email address. Must be a valid email format.
     - `password` (string): The password for the new account. Must meet complexity requirements (e.g., minimum length).
+- `token` (String): JWT Token
+
+
+
+
+
+
+## User Login Endpoint (/user/login)
+
+### Description
+
+This endpoint allows registered users to log in to the platform. It verifies the user's credentials and returns a JWT token for authentication.
+
+### HTTP Method
+
+`POST`
+
+## Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `email` (string, required): The user's email address. Must be a valid email format.
+- `password` (string, required): The user's password.
+
+Example:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "SecurePassword123"
+}
+```
+
+## Response Status Codes
+
+- `200 OK`: Successfully logged in. The response body will contain a JWT token and user details.
+- `400 Bad Request`: The request body is invalid or missing required fields. The response body will contain details about the validation errors.
+- `401 Unauthorized`: Invalid email or password.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+## Response Example
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGQzZjA4NzM4Zjg3ZjAwMTIxNjJkZTUiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE2OTIxMzEwODcsImV4cCI6MTY5MjIzMTA4N30.SomeExampleToken",
+  "user": {
+    "fullname": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "user@example.com"
+  }
+}
+```
+
+- `user` (object):
+    - `fullname` (object):
+        - `firstName` (string): The user's first name.
+        - `lastName` (string): The user's last name.
+    - `email` (string): The user's email address.
 - `token` (String): JWT Token
