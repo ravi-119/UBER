@@ -44,11 +44,6 @@ Example:
     - `password` (string): The password for the new account. Must meet complexity requirements (e.g., minimum length).
 - `token` (String): JWT Token
 
-
-
-
-
-
 ## User Login Endpoint (/user/login)
 
 ### Description
@@ -103,3 +98,65 @@ Example:
         - `lastName` (string): The user's last name.
     - `email` (string): The user's email address.
 - `token` (String): JWT Token
+
+## User Profile Endpoint (/user/profile)
+
+### Description
+
+This endpoint retrieves the profile information of the currently authenticated user.
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+Requires a valid JWT token in the Authorization header.
+
+### Response Status Codes
+
+- `200 OK`: Successfully retrieved user profile
+- `401 Unauthorized`: Invalid or missing authentication token
+- `500 Internal Server Error`: An unexpected error occurred on the server
+
+### Response Example
+
+```json
+{
+  "fullname": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "email": "user@example.com",
+  "createdAt": "2023-08-15T10:30:00.000Z"
+}
+```
+
+## User Logout Endpoint (/user/logout)
+
+### Description
+
+This endpoint logs out the current user by invalidating their JWT token.
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+Requires a valid JWT token in the Authorization header.
+
+### Response Status Codes
+
+- `200 OK`: Successfully logged out
+- `400 Bad Request`: Token not found
+- `401 Unauthorized`: Invalid or missing authentication token
+- `500 Internal Server Error`: An unexpected error occurred on the server
+
+### Response Example
+
+```json
+{
+  "message": "Logout successfully"
+}
+```
