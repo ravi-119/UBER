@@ -160,3 +160,67 @@ Requires a valid JWT token in the Authorization header.
   "message": "Logout successfully"
 }
 ```
+
+# Captain Registration Endpoint (/captains/register)
+
+## Description
+
+This endpoint allows new captains to register on the platform. It requires specific details about the captain and their vehicle to create a new account.
+
+### HTTP Method
+
+`POST`
+
+## Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `firstname` (string, required): The captain's first name.
+- `lastname` (string, required): The captain's last name.
+- `email` (string, required): The captain's email address. Must be a valid email format.
+- `password` (string, required): The password for the captain's account. Must meet complexity requirements (e.g., minimum length of 6 characters).
+- `color` (string, required): The color of the captain's vehicle.
+- `plateNumber` (string, required): The license plate number of the captain's vehicle.
+- `capacity` (number, required): The seating capacity of the vehicle.
+- `vehicalType` (string, required): The type of vehicle. Must be one of the following: `car`, `bike`, `auto`.
+
+### Example Request Body
+
+```json
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "email": "captain@example.com",
+  "password": "SecurePassword123",
+  "color": "Red",
+  "plateNumber": "ABC123",
+  "capacity": 4,
+  "vehicalType": "car"
+}
+```
+
+## Response Example
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYXB0YWluSWQiOiI2NGQzZjA4NzM4Zjg3ZjAwMTIxNjJkZTUiLCJlbWFpbCI6ImNhcHRhaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE2OTIxMzEwODcsImV4cCI6MTY5MjIzMTA4N30.SomeExampleToken",
+  "captain": {
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "captain@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plateNumber": "ABC123",
+      "capacity": 4
+    },
+    "vehicalType": "car"
+  }
+}
+```
+
+## Response Status Codes
+
+- `201 Created`: Successfully created a new Captain account.
+- `400 Bad Request`: The request body is invalid or missing required fields.
