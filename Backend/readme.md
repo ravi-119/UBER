@@ -224,3 +224,115 @@ The request body should be in JSON format and include the following fields:
 
 - `201 Created`: Successfully created a new Captain account.
 - `400 Bad Request`: The request body is invalid or missing required fields.
+
+
+
+
+
+## Captain Login Endpoint (/captains/login)
+
+### Description
+
+This endpoint allows registered captains to log in to the platform. It verifies the captain's credentials and returns a JWT token for authentication.
+
+### HTTP Method
+
+`POST`
+
+### Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `email` (string, required): The captain's email address. Must be a valid email format.
+- `password` (string, required): The captain's password. Must meet complexity requirements (e.g., minimum length of 8 characters).
+
+#### Example Request Body
+
+```json
+{
+  "email": "captain@example.com",
+  "password": "SecurePassword123"
+}
+```
+
+### Response
+
+#### Success Response
+
+- **Status Code**: `200 OK`
+- **Description**: Successfully logged in. The response body will contain a JWT token and captain details.
+
+#### Example Response Body
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjYXB0YWluSWQiOiI2NGQzZjA4NzM4Zjg3ZjAwMTIxNjJkZTUiLCJlbWFpbCI6ImNhcHRhaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE2OTIxMzEwODcsImV4cCI6MTY5MjIzMTA4N30.SomeExampleToken",
+  "captain": {
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "captain@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plateNumber": "ABC123",
+      "capacity": 4
+    },
+    "vehicalType": "car"
+  }
+}
+```
+
+#### Error Responses
+
+1. **Invalid Credentials**
+   - **Status Code**: `400 Bad Request`
+   - **Description**: The email or password is invalid.
+
+   #### Example Response Body
+
+   ```json
+   {
+     "message": "Invalid email or password"
+   }
+   ```
+
+2. **Validation Errors**
+   - **Status Code**: `400 Bad Request`
+   - **Description**: The request body is invalid or missing required fields.
+
+   #### Example Response Body
+
+   ```json
+   {
+     "errors": [
+       {
+         "msg": "Invalid Email",
+         "param": "email",
+         "location": "body"
+       },
+       {
+         "msg": "Password must be at least 8 characters long",
+         "param": "password",
+         "location": "body"
+       }
+     ]
+   }
+   ```
+
+3. **Server Error**
+   - **Status Code**: `500 Internal Server Error`
+   - **Description**: An unexpected error occurred on the server.
+
+### Validation Rules
+
+- `email`: Must be a valid email address.
+- `password`: Must be at least 8 characters long.
+
+### Notes
+
+- The `token` in the response is a JWT token that can be used for authentication in subsequent requests.
+- Ensure that the email and password provided in the request body match the credentials of a registered captain.
+
+
+
