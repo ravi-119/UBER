@@ -1,6 +1,7 @@
 const userModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const captainModel = require('../models/captain.model');
+const BlacklistTokenModel = require('../models/blacklistToken.model');
 
 
 module.exports.authUser = async (req, res, next) => {
@@ -37,10 +38,10 @@ module.exports.authCaptain = async (req, res, next) => {
     }
 
     // Check if the token is blacklisted
-    // const isBlacklisted = await BlacklistToken.findOne({ token });
-    // if (isBlacklisted) {
-    //     return res.status(401).json({ message: 'Unauthorized' });
-    // }
+    const isBlacklisted = await BlacklistTokenModel.findOne({ token:token });
+    if (isBlacklisted) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
 
     try {
         // Verify the token
@@ -48,14 +49,15 @@ module.exports.authCaptain = async (req, res, next) => {
 
         // Find the captain by ID
         const captain = await captainModel.findById(decoded._id);
-        if (!captain) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
+        // if (!captain) {
+        //     return res.status(401).json({ message: 'Unauthorized' });
+        // }
 
         // Attach the captain to the request object
         req.captain = captain;
         return next();
     } catch (err) {
+        console.log(err);
         return res.status(401).json({ message: 'Unauthorized' });
     }
 };
