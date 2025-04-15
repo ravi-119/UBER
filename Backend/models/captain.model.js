@@ -13,16 +13,16 @@ const captainSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'inactive',
-        Enum: ['active', 'inactive']
+        enum: ['active', 'inactive']
     },
     vehicle: {
         color: String,
         plateNumber: String,
-        capaciry: Number
+        capacity: Number
     },
     vehicalType: {
         type: String,
-        Enum: ['car', 'bike', 'auto']
+        enum: ['car', 'bike', 'auto']
     },  
 
     location: {
