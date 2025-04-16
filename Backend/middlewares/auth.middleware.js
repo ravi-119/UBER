@@ -31,36 +31,38 @@ module.exports.authUser = async (req, res, next) => {
 
 
 
+
 module.exports.authCaptain = async (req, res, next) => {
-    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    // Check if the token is blacklisted
-    const isBlacklisted = await BlacklistTokenModel.findOne({ token:token });
-    if (isBlacklisted) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-
     try {
-        // Verify the token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const authHeader = req.headers.authorization;
+        const token = req.cookies.token || (authHeader && authHeader.startsWith('Bearer ') && authHeader.split(' ')[1]);
 
-        // Find the captain by ID
-        const captain = await captainModel.findById(decoded._id);
-        if (!captain) {
-            return res.status(401).json({ message: 'Unauthorized' });
+
+        if (!token) {
+            return res.status(401).json({ message: 'Unauthorized: Token missing' });
         }
 
-        // Attach the captain to the request object
+        // Check if token is blacklisted
+        const isBlacklisted = await BlacklistTokenModel.findOne({ token });
+        if (isBlacklisted) {
+            return res.status(401).json({ message: 'Unauthorized: Token blacklisted' });
+        }
+
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Fetch captain
+        const captain = await captainModel.findById(decoded._id);
+        if (!captain) {
+            return res.status(401).json({ message: 'Unauthorized: Captain not found' });
+        }
+
+        // Attach captain to request
         req.captain = captain;
-        return next();
+        next();
 
     } catch (err) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        console.error('Auth error:', err.message);
+        return res.status(401).json({ message: 'Unauthorized: Invalid or expired token' });
     }
 };
-
-
-
