@@ -225,10 +225,6 @@ The request body should be in JSON format and include the following fields:
 - `201 Created`: Successfully created a new Captain account.
 - `400 Bad Request`: The request body is invalid or missing required fields.
 
-
-
-
-
 ## Captain Login Endpoint (/captains/login)
 
 ### Description
@@ -333,6 +329,183 @@ The request body should be in JSON format and include the following fields:
 
 - The `token` in the response is a JWT token that can be used for authentication in subsequent requests.
 - Ensure that the email and password provided in the request body match the credentials of a registered captain.
+
+## Captain Profile Endpoint (/captains/profile)
+
+### Description
+
+This endpoint retrieves the profile information of the currently authenticated captain. It requires a valid JWT token for authentication.
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+- Requires a valid JWT token in the `Authorization` header or as a cookie.
+
+### Request Headers
+
+- `Authorization`: Bearer `<JWT_TOKEN>` (optional if the token is provided as a cookie).
+
+### Response Status Codes
+
+- `200 OK`: Successfully retrieved captain profile.
+- `400 Bad Request`: Captain ID is missing in the request.
+- `401 Unauthorized`: Invalid or missing authentication token.
+- `404 Not Found`: Captain not found.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+### Response Example
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "captain": {
+    "_id": "64d3f08738f87f0012162de5",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "captain@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plateNumber": "ABC123",
+      "capacity": 4
+    },
+    "vehicalType": "car",
+    "status": "active",
+    "location": {
+      "latitude": 40.7128,
+      "longitude": -74.0060
+    }
+  }
+}
+```
+
+#### Error Responses
+
+1. **Missing Captain ID**
+   - **Status Code**: `400 Bad Request`
+   - **Description**: Captain ID is not found in the request.
+
+   ```json
+   {
+     "message": "Captain ID not found in request"
+   }
+   ```
+
+2. **Captain Not Found**
+   - **Status Code**: `404 Not Found`
+   - **Description**: The captain does not exist in the database.
+
+   ```json
+   {
+     "message": "Captain not found"
+   }
+   ```
+
+3. **Unauthorized**
+   - **Status Code**: `401 Unauthorized`
+   - **Description**: Invalid or missing authentication token.
+
+   ```json
+   {
+     "message": "Unauthorized: Token missing"
+   }
+   ```
+
+4. **Server Error**
+   - **Status Code**: `500 Internal Server Error`
+   - **Description**: An unexpected error occurred on the server.
+
+   ```json
+   {
+     "message": "Server Error",
+     "error": "Detailed error message"
+   }
+   ```
+
+---
+
+## Captain Logout Endpoint (/captains/logout)
+
+### Description
+
+This endpoint logs out the currently authenticated captain by invalidating their JWT token. The token is blacklisted to prevent further use.
+
+### HTTP Method
+
+`POST`
+
+### Authentication
+
+- Requires a valid JWT token in the `Authorization` header or as a cookie.
+
+### Request Headers
+
+- `Authorization`: Bearer `<JWT_TOKEN>` (optional if the token is provided as a cookie).
+
+### Response Status Codes
+
+- `200 OK`: Successfully logged out.
+- `400 Bad Request`: Token not found in the request.
+- `401 Unauthorized`: Invalid or missing authentication token.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+### Response Example
+
+#### Success Response
+
+```json
+{
+  "message": "Logout successfully"
+}
+```
+
+#### Error Responses
+
+1. **Token Not Found**
+   - **Status Code**: `400 Bad Request`
+   - **Description**: The token is missing in the request.
+
+   ```json
+   {
+     "message": "Token not found"
+   }
+   ```
+
+2. **Unauthorized**
+   - **Status Code**: `401 Unauthorized`
+   - **Description**: Invalid or missing authentication token.
+
+   ```json
+   {
+     "message": "Unauthorized: Token missing"
+   }
+   ```
+
+3. **Server Error**
+   - **Status Code**: `500 Internal Server Error`
+   - **Description**: An unexpected error occurred on the server.
+
+   ```json
+   {
+     "message": "Server Error",
+     "error": "Detailed error message"
+   }
+   ```
+
+---
+
+### Notes
+
+- The `Authorization` header or cookie must contain a valid JWT token for both endpoints.
+- The `/captains/logout` endpoint blacklists the token to ensure it cannot be reused.
+- Ensure proper error handling and logging for production use.
+
 
 
 
