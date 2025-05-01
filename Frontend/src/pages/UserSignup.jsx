@@ -14,16 +14,17 @@ const UserSignup = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault()
-    const newUser = {
+    setUserData ({
       fullname: {
         firstname: firstName,
         lastname: lastName
       },
       email: email,
       password: password
-    }
+    })
 
-
+    // console.log(userData);
+    
     setEmail('')
     setFirstName('')
     setLastName('')
@@ -106,3 +107,4 @@ const UserSignup = () => {
 }
 
 export default UserSignup
+
